@@ -107,8 +107,26 @@ Check out a few resources that may come in handy when working with NestJS:
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Stay in touch
 
+### Estrategia de Autenticación por Tipo de Cliente
+1. Cliente Web (Next.js mediante Patrón BFF)
+El navegador web nunca debe almacenar ni manipular el refreshToken mediante JavaScript directamente (localStorage o sessionStorage).
+
+Flujo: La aplicación en Next.js (Server Actions o API Route Handlers) realiza la petición de autenticación Server-to-Server hacia NestJS.
+
+Manejo de Tokens: Next.js recibe la respuesta JSON de NestJS en el servidor y escribe el refreshToken (y opcionalmente el accessToken) en una cookie HttpOnly, Secure y SameSite=Lax/Strict dirigida al navegador.
+
+Protección XSS: Dado que la cookie es HttpOnly, cualquier script malicioso (XSS) inyectado en el frontend será incapaz de leer el token de sesión o el refresh token.
+
+2. Clientes Móviles (React Native, Flutter, iOS, Android)
+Flujo: Las aplicaciones móviles consumen directamente los endpoints de NestJS.
+
+Manejo de Tokens: Reciben la respuesta JSON y extraen el accessToken y refreshToken.
+
+Almacenamiento Seguro: Los tokens deben guardarse obligatoriamente en el almacenamiento seguro del sistema operativo (flutter_secure_storage, react-native-keychain o equivalentes).
+
+
+## Stay in touch
 - Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
